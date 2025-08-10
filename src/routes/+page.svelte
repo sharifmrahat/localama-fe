@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
 	import { marked } from 'marked';
 	import Header from '$lib/components/common/Header.svelte';
-	import Button from '$lib/components/ui/button/button.svelte';
-	import Textarea from '$lib/components/ui/textarea/textarea.svelte';
-	import Input from '$lib/components/ui/input/input.svelte';
-	import ScrollArea from '$lib/components/ui/scroll-area/scroll-area.svelte';
+	import CircleAlertIcon from '@lucide/svelte/icons/circle-alert';
+	import * as Alert from '$lib/components/ui/alert/index.js';
+	import ChatInput from '$lib/components/chat/ChatInput.svelte';
 
 	type ChatEntry = {
 		role: 'user' | 'assistant';
@@ -13,15 +12,23 @@
 		typing: boolean;
 	};
 
-	let model = 'gemma3:1b';
-	let prompt = '';
-	let error: string | null = null;
-	let eventSource: EventSource | null = null;
+	let model = $state('gemma3:1b');
+	let prompt = $state('');
+	let error: string | null = $state(null);
+	let eventSource: EventSource | null = $state(null);
+	let scrollAreaRef: HTMLDivElement | null = $state(null);
 
-	let history: ChatEntry[] = [];
+	let history: ChatEntry[] = $state([]);
 
 	// Markdown setup
 	marked.setOptions({ breaks: true });
+
+	async function scrollToBottom() {
+		await tick(); // wait for DOM update
+		if (scrollAreaRef) {
+			scrollAreaRef.scrollTop = scrollAreaRef.scrollHeight;
+		}
+	}
 
 	onMount(() => {
 		const saved = localStorage.getItem('localama-history');
@@ -46,7 +53,9 @@
 
 		// Add assistant bubble with typing placeholder
 		history = [...history, { role: 'assistant', text: '', typing: true }];
+
 		saveHistory();
+		scrollToBottom();
 
 		const modelIndex = history.length - 1;
 		let currentResponse = '';
@@ -68,6 +77,7 @@
 					history[modelIndex].text = currentResponse;
 					history = [...history];
 					saveHistory();
+					scrollToBottom();
 				}
 				if (parsed.done) {
 					streamEndedGracefully = true;
@@ -92,10 +102,13 @@
 		};
 	}
 
+	let isStreaming = $state(false);
+
 	function stopStream() {
 		if (eventSource) {
 			eventSource.close();
 			eventSource = null;
+			isStreaming = false;
 
 			// Get the last message (assistant's bubble)
 			const lastIndex = history.length - 1;
@@ -120,20 +133,23 @@
 	<Header bind:model />
 
 	<main class="mx-auto mt-20 w-6xl flex-1 space-y-4 p-4">
-		<ScrollArea class="mx-auto h-[24rem] w-6xl px-8 ">
+		<div
+			bind:this={scrollAreaRef}
+			class="no-scrollbar mx-auto mb-20 h-[50rem] w-6xl overflow-y-auto px-8"
+		>
 			<!-- Chat history -->
 			{#each history as message}
 				{#if message.role === 'user'}
-					<div class="flex justify-end">
+					<div class="my-10 flex justify-end">
 						<div
-							class="max-w-xl rounded-lg bg-blue-500 px-4 py-2.5 text-white shadow dark:text-black"
+							class="max-w-lg rounded-lg bg-blue-500 px-4 py-2.5 text-white shadow dark:text-black"
 						>
 							{message.text}
 						</div>
 					</div>
 				{:else}
 					<div class="flex justify-start">
-						<div class="max-w-xl rounded-lg bg-gray-200 px-4 py-2 shadow dark:text-black">
+						<div class="mb-10 max-w-lg rounded-lg bg-gray-200 px-4 py-2 shadow dark:text-black">
 							{#if message.typing && !message.text}
 								<div class="typing-dots flex gap-1 text-gray-600">
 									<span>•</span><span>•</span><span>•</span>
@@ -152,44 +168,27 @@
 
 			<!-- Error -->
 			{#if error}
-				<div class="mt-2 text-red-500">{error}</div>
+				<Alert.Root variant="destructive">
+					<CircleAlertIcon class="size-4" />
+					<Alert.Title>Error</Alert.Title>
+					<Alert.Description>{error}</Alert.Description>
+				</Alert.Root>
 			{/if}
-		</ScrollArea>
-
-		<!-- Input -->
-		<div
-			class="fixed bottom-0 mx-auto w-fit space-y-3 rounded bg-gray-50 p-4 text-black shadow lg:w-6xl dark:bg-slate-900 dark:text-white"
-		>
-			<Textarea
-				placeholder="Enter your prompt..."
-				bind:value={prompt}
-				class="h-12 w-full rounded border p-2"
-			></Textarea>
-
-			<div class="flex cursor-pointer items-center gap-2">
-				<Button
-					variant="default"
-					onclick={startStream}
-					disabled={history.some((h) => h.typing)}
-					class="cursor-pointer rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-				>
-					Send
-				</Button>
-				{#if eventSource}
-					<Button
-						variant="destructive"
-						onclick={stopStream}
-						class="cursor-pointer rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
-					>
-						Stop
-					</Button>
-				{/if}
-			</div>
 		</div>
+		<ChatInput bind:model bind:prompt bind:isStreaming {startStream} {stopStream} />
 	</main>
 </div>
 
 <style>
+	@layer utilities {
+		.no-scrollbar::-webkit-scrollbar {
+			display: none; /* Chrome, Safari, Edge */
+		}
+		.no-scrollbar {
+			-ms-overflow-style: none; /* IE and old Edge */
+			scrollbar-width: none; /* Firefox */
+		}
+	}
 	.typing-dots span {
 		display: inline-block;
 		animation: blink 1.4s infinite both;

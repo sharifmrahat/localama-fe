@@ -1,26 +1,35 @@
 <script lang="ts">
 	import SunIcon from '@lucide/svelte/icons/sun';
 	import MoonIcon from '@lucide/svelte/icons/moon';
-
 	import { toggleMode } from 'mode-watcher';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import Input from '../ui/input/input.svelte';
+	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 
 	let { model = $bindable('gemma3:1b') } = $props<{ model?: string }>();
 </script>
 
 <header
-	class="fixed flex w-full items-center justify-between bg-gray-50 px-14 py-5 shadow dark:bg-slate-900"
+	class="fixed z-50 flex w-full items-center justify-between bg-gray-50 px-14 py-5 shadow dark:bg-slate-900"
 >
-	<h1 class="text-xl font-bold text-blue-600">LOCALAMA</h1>
+	<h1 class="font-mono text-xl font-bold text-gray-800 dark:text-gray-100">Localama</h1>
 
 	<div>
-		<Input
-			type="text"
-			placeholder="Model name"
-			bind:value={model}
-			class="w-full rounded border p-2"
-		/>
+		<Tooltip.Provider>
+			<Tooltip.Root>
+				<Tooltip.Trigger
+					><Input
+						type="text"
+						placeholder="Model name"
+						bind:value={model}
+						class="w-full rounded border p-2"
+					/></Tooltip.Trigger
+				>
+				<Tooltip.Content>
+					<p>Model Name</p>
+				</Tooltip.Content>
+			</Tooltip.Root>
+		</Tooltip.Provider>
 	</div>
 
 	<Button onclick={toggleMode} variant="outline" size="icon">
