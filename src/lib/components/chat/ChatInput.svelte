@@ -10,12 +10,10 @@
 
 	let {
 		prompt = $bindable(''),
-		model = $bindable(''),
 		isStreaming = $bindable(false),
 		startStream,
 		stopStream
 	} = $props<{
-		model?: string;
 		prompt?: string;
 		isStreaming?: boolean;
 		startStream?: () => void;
@@ -234,7 +232,6 @@
 								<Button
 									onclick={onStop}
 									class="flex items-center gap-2 rounded-lg  px-4 py-2 text-sm font-medium  shadow "
-									title="Stop"
 								>
 									<CircleStop />
 								</Button>
