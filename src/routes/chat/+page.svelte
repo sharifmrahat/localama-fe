@@ -61,7 +61,7 @@
 		let streamEndedGracefully = false;
 
 		eventSource = new EventSource(
-			`http://localhost:5050/api/v1/chat/stream?model=${encodeURIComponent(
+			`http://localhost:5000/api/v1/chat/stream?model=${encodeURIComponent(
 				model
 			)}&prompt=${encodeURIComponent(prompt)}`
 		);

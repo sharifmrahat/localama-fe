@@ -29,14 +29,14 @@
 
 		try {
 			// Step 1: Check BE health
-			const healthRes = await fetch('http://localhost:5050/api/v1');
+			const healthRes = await fetch('http://localhost:5000/api/v1');
 			if (!healthRes.ok) throw new Error('Backend not reachable!');
 
 			const healthData = await healthRes.json();
 			if (healthData.status !== 200) throw new Error('Backend not ready yet!');
 
 			// Step 2: Check if model exists
-			const modelRes = await fetch('http://localhost:5050/api/v1/chat', {
+			const modelRes = await fetch('http://localhost:5000/api/v1/chat', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
