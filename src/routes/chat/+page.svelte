@@ -11,7 +11,7 @@
 		typing: boolean;
 	};
 
-	let model = $state('deepseek-r1:1.5b');
+	let model = $state('');
 	let prompt = $state('');
 	let error: string | null = $state(null);
 	let eventSource: EventSource | null = $state(null);
@@ -31,6 +31,8 @@
 
 	onMount(() => {
 		const saved = localStorage.getItem('localama_chatHistory');
+		const userInfo = localStorage.getItem('localama_userInfo');
+		model = JSON.parse(userInfo as any).model;
 		if (saved) {
 			history = JSON.parse(saved);
 		}
@@ -41,6 +43,7 @@
 	}
 
 	function startStream() {
+		console.log({ prompt, model });
 		if (!prompt.trim() || !model.trim()) {
 			error = 'Please enter both model and prompt.';
 			return;
@@ -154,7 +157,7 @@
 							{:else}
 								<div class="prose prose-sm max-w-none">
 									{@html marked(
-										message.text + (message.typing ? '<span class="cursor">|</span>' : '')
+										message.text + (message.typing ? '<span class="cursor">▌</span>' : '')
 									)}
 								</div>
 							{/if}
@@ -186,6 +189,12 @@
 			scrollbar-width: none; /* Firefox */
 		}
 	}
+
+	/* .cursor {
+		display: inline-block;
+		width: 8px;
+		animation: blinkCursor 1s infinite;
+	} */
 	.typing-dots span {
 		display: inline-block;
 		animation: blink 1.4s infinite both;

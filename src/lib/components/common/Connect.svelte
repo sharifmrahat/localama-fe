@@ -7,7 +7,7 @@
 
 	let name = $state('');
 	let username = $state('');
-	let model = $state('deepseek-r1:1.5b');
+	let model = $state('');
 	let connecting = $state(false);
 	let errorMessage = $state('');
 

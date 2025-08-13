@@ -7,6 +7,10 @@ RUN bun install
 
 COPY . .
 
+# Build the SvelteKit project
+RUN bun run build
+
 EXPOSE 3000
 
-CMD ["bun", "run", "dev"]
+# Run vite preview (serves the build)
+CMD ["bun", "run", "preview"]

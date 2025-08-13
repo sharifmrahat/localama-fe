@@ -5,8 +5,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import logo from '/src/lib/assets/images/localama.png';
 
 	let isLoggedIn = $state(false);
 	let model = $state('');
@@ -51,8 +51,12 @@
 <header
 	class="fixed z-50 flex w-full items-center justify-between bg-gray-50 px-4 py-5 shadow lg:px-14 dark:bg-slate-900"
 >
-	<a href="/" class="font-mono text-xl font-bold text-gray-800 lg:text-2xl dark:text-gray-100">
-		Localama
+	<a
+		href="/"
+		class="flex flex-row gap-x-2 font-mono text-2xl font-bold text-gray-800 lg:text-4xl dark:text-gray-100"
+	>
+		<img src={logo} alt="localama" class="h-8 w-8 rounded lg:h-9 lg:w-9 dark:invert" />
+		<span>Localama</span>
 	</a>
 
 	{#if isLoggedIn && $page.url.pathname === '/chat'}
