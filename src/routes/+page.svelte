@@ -6,7 +6,7 @@
 	let year = new Date().getFullYear();
 
 	function goToDocs() {
-		goto('/docs');
+		window.open('https://github.com/sharifmrahat/localama', '_blank');
 	}
 
 	function goToConnect() {
@@ -21,17 +21,15 @@
 
 		<h1 class="mb-4 font-mono text-5xl font-bold lg:text-6xl">Localama</h1>
 		<p class="mb-8 max-w-2xl text-muted-foreground">
-			Localama is a lightweight, local AI chat system to run
-			<a
+			Localama is a lightweight AI chat application for running <a
 				href="https://ollama.com"
 				target="_blank"
 				rel="noopener noreferrer"
 				class="underline hover:text-primary"
 			>
 				Ollama
-			</a>
-			models directly on your own machine. Keep your data private, enjoy fast local inference, and experiment
-			with different large language models without the cloud.
+			</a> models locally. It provides a clean, responsive chat interface with real-time streaming, enabling
+			seamless interaction with large language models directly on your machine.
 		</p>
 
 		<div class="flex gap-4">

@@ -29,7 +29,7 @@
 	});
 
 	function goToDocs() {
-		goto('/docs');
+		window.open('https://github.com/sharifmrahat/localama', '_blank');
 	}
 
 	function goToConnect() {
