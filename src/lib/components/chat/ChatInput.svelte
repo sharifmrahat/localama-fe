@@ -134,7 +134,7 @@
 	});
 </script>
 
-<div class="fixed inset-x-0 bottom-0 mx-auto w-full max-w-3xl">
+<div class="fixed inset-x-0 bottom-0 mx-auto w-full p-2.5 lg:max-w-3xl">
 	<!-- small helper / status -->
 	<div class="my-2 flex items-center gap-3 text-xs text-gray-500">
 		{#if isRecording}

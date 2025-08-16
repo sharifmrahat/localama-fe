@@ -19,11 +19,11 @@
 
 	let history: ChatEntry[] = $state([]);
 
-	// Markdown setup
+	//* Markdown setup
 	marked.setOptions({ breaks: true });
 
 	async function scrollToBottom() {
-		await tick(); // wait for DOM update
+		await tick(); //* wait for DOM update
 		if (scrollAreaRef) {
 			scrollAreaRef.scrollTop = scrollAreaRef.scrollHeight;
 		}
@@ -32,8 +32,8 @@
 	onMount(() => {
 		const saved = localStorage.getItem('localama_chatHistory');
 		const userInfo = localStorage.getItem('localama_userInfo');
-		model = JSON.parse(userInfo as any).model;
-		if (saved) {
+		model = JSON.parse(userInfo as any)?.model;
+		if (userInfo && saved) {
 			history = JSON.parse(saved);
 		}
 	});
@@ -50,10 +50,10 @@
 		}
 		error = null;
 
-		// Add user bubble
+		//* Add user bubble
 		history = [...history, { role: 'user', text: prompt, typing: false }];
 
-		// Add assistant bubble with typing placeholder
+		//* Add assistant bubble with typing placeholder
 		history = [...history, { role: 'assistant', text: '', typing: true }];
 
 		saveHistory();
@@ -112,14 +112,14 @@
 			eventSource = null;
 			isStreaming = false;
 
-			// Get the last message (assistant's bubble)
+			//* Get the last message (assistant's bubble)
 			const lastIndex = history.length - 1;
 			if (lastIndex >= 0 && history[lastIndex].role === 'assistant') {
 				if (history[lastIndex].text.trim() === '') {
-					// No content → remove the bubble
+					//* No content → remove the bubble
 					history.splice(lastIndex, 1);
 				} else {
-					// Keep whatever text we got, remove typing status
+					//* Keep whatever text we got, remove typing status
 					history[lastIndex].typing = false;
 				}
 				history = [...history];
@@ -131,11 +131,11 @@
 	onDestroy(() => stopStream());
 </script>
 
-<div class="flex min-h-screen flex-col bg-gray-50 dark:bg-slate-800">
-	<main class="mx-auto mt-20 w-6xl flex-1 space-y-4 p-4">
+<div class="flex min-h-screen w-fit flex-col bg-gray-50 lg:w-full dark:bg-slate-800">
+	<main class="mx-auto mt-20 w-fit flex-1 space-y-4 p-4 lg:w-6xl">
 		<div
 			bind:this={scrollAreaRef}
-			class="no-scrollbar mx-auto mb-20 h-[50rem] w-6xl overflow-y-auto px-8"
+			class="no-scrollbar mx-auto mb-20 h-[50rem] overflow-y-auto px-8 lg:w-6xl"
 		>
 			<!-- Chat history -->
 			{#each history as message}

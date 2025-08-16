@@ -8,6 +8,9 @@ export default defineConfig({
 		host: true,
 		port: 3000
 	},
+	server: {
+		host: true
+	},
 	plugins: [
 		tailwindcss(),
 		sveltekit(),

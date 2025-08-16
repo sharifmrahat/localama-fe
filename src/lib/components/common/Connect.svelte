@@ -3,7 +3,6 @@
 	import { Input } from '../ui/input';
 	import Button from '../ui/button/button.svelte';
 	import { goto } from '$app/navigation';
-	// import Loader2 from '@lucide/svelte/icons/loader2';
 
 	let name = $state('');
 	let username = $state('');

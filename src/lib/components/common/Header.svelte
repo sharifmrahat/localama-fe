@@ -60,7 +60,7 @@
 	</a>
 
 	{#if isLoggedIn && $page.url.pathname === '/chat'}
-		<div class="flex items-center gap-4">
+		<div class="hidden items-center gap-4 lg:flex">
 			<Tooltip.Provider>
 				<Tooltip.Root>
 					<Tooltip.Trigger>
@@ -80,7 +80,7 @@
 		{#if !isLoggedIn}
 			<!-- Home page buttons -->
 			{#if $page.url.pathname === '/'}
-				<Button onclick={goToDocs} variant="outline">Docs</Button>
+				<Button onclick={goToDocs} variant="outline" class="hidden md:block">Docs</Button>
 				<Button onclick={goToConnect}>Connect</Button>
 			{/if}
 		{:else if $page.url.pathname === '/'}

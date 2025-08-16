@@ -17,7 +17,8 @@
 <div class="flex min-h-screen flex-col justify-between">
 	<!-- Main content -->
 	<main class="flex flex-1 flex-col items-center justify-center px-4 text-center">
-		<img src={logo} alt="localama" class="mb-4 h-32 w-32 lg:h-38 lg:w-38 dark:invert" />
+		<img src={logo} alt="localama" class="mb-4 h-32 w-32 lg:h-42 lg:w-42 dark:invert" />
+
 		<h1 class="mb-4 font-mono text-5xl font-bold lg:text-6xl">Localama</h1>
 		<p class="mb-8 max-w-2xl text-muted-foreground">
 			Localama is a lightweight, local AI chat system to run
